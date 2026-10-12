@@ -751,6 +751,9 @@ describe("Scopes", () => {
         providerName: "openai",
         inputTokens: 100,
         outputTokens: 150,
+        responseModel: "gpt-4-2024-11-20",
+        cacheReadInputTokens: 12,
+        cacheWriteInputTokens: 7,
         finishReasons: ["stop"],
       };
 
@@ -783,6 +786,22 @@ describe("Scopes", () => {
       expect(keySet).toContain("user.name");
       expect(keySet).toContain("user.email");
       expect(keySet).toContain("client.address");
+      expect(calls).toEqual(
+        expect.arrayContaining([
+          {
+            key: OpenTelemetryConstants.GEN_AI_RESPONSE_MODEL_KEY,
+            val: "gpt-4-2024-11-20",
+          },
+          {
+            key: OpenTelemetryConstants.GEN_AI_USAGE_CACHE_READ_INPUT_TOKENS_KEY,
+            val: 12,
+          },
+          {
+            key: OpenTelemetryConstants.GEN_AI_USAGE_CACHE_WRITE_INPUT_TOKENS_KEY,
+            val: 7,
+          },
+        ]),
+      );
       scope?.dispose();
       spy.mockRestore();
     });
@@ -834,6 +853,9 @@ describe("Scopes", () => {
       expect(() => scope?.recordOutputMessages(["Generated response"])).not.toThrow();
       expect(() => scope?.recordInputTokens(50)).not.toThrow();
       expect(() => scope?.recordOutputTokens(100)).not.toThrow();
+      expect(() => scope?.recordResponseModel("gpt-4-2024-11-20")).not.toThrow();
+      expect(() => scope?.recordCacheReadInputTokens(12)).not.toThrow();
+      expect(() => scope?.recordCacheWriteInputTokens(7)).not.toThrow();
       expect(() => scope?.recordFinishReasons(["stop", "length"])).not.toThrow();
       scope?.dispose();
     });

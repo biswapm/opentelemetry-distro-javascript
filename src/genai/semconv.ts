@@ -49,6 +49,10 @@ export const ATTR_GEN_AI_OUTPUT_MESSAGES = "gen_ai.output.messages" as const;
 // GenAI usage
 export const ATTR_GEN_AI_USAGE_INPUT_TOKENS = "gen_ai.usage.input_tokens" as const;
 export const ATTR_GEN_AI_USAGE_OUTPUT_TOKENS = "gen_ai.usage.output_tokens" as const;
+export const ATTR_GEN_AI_USAGE_CACHE_READ_INPUT_TOKENS =
+  "gen_ai.usage.cache_read.input_tokens" as const;
+export const ATTR_GEN_AI_USAGE_CACHE_WRITE_INPUT_TOKENS =
+  "gen_ai.usage.cache_write.input_tokens" as const;
 
 // GenAI agent
 export const ATTR_GEN_AI_AGENT_ID = "gen_ai.agent.id" as const;
