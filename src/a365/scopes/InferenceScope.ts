@@ -4,6 +4,7 @@
 import { SpanKind } from "@opentelemetry/api";
 import { OpenTelemetryScope } from "./OpenTelemetryScope.js";
 import { OpenTelemetryConstants } from "../constants.js";
+import { InferenceOperationType } from "../contracts.js";
 import type {
   InferenceDetails,
   AgentDetails,
@@ -52,7 +53,7 @@ export class InferenceScope extends OpenTelemetryScope {
     const resolvedSpanDetails: SpanDetails = { ...spanDetails, spanKind: SpanKind.CLIENT };
 
     super(
-      details.operationName.toString().toLowerCase(),
+      getOperationName(details.operationName),
       `${details.operationName} ${details.model}`,
       agentDetails,
       resolvedSpanDetails,
@@ -88,6 +89,17 @@ export class InferenceScope extends OpenTelemetryScope {
       this.setTagMaybe(OpenTelemetryConstants.SERVER_ADDRESS_KEY, details.endpoint.host);
       if (details.endpoint.port && details.endpoint.port !== 443) {
         this.setTagMaybe(OpenTelemetryConstants.SERVER_PORT_KEY, details.endpoint.port);
+      }
+    }
+
+    function getOperationName(operationName: InferenceOperationType): string {
+      switch (operationName) {
+        case InferenceOperationType.CHAT:
+          return "chat";
+        case InferenceOperationType.TEXT_COMPLETION:
+          return "text_completion";
+        case InferenceOperationType.GENERATE_CONTENT:
+          return "generate_content";
       }
     }
   }

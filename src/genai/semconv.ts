@@ -17,6 +17,8 @@ export const GEN_AI_OPERATION_EXECUTE_TOOL = "execute_tool" as const;
 export const GEN_AI_OPERATION_OUTPUT_MESSAGES = "output_messages" as const;
 export const GEN_AI_OPERATION_APPLY_GUARDRAIL = "apply_guardrail" as const;
 export const GEN_AI_OPERATION_CHAT = "chat" as const;
+export const GEN_AI_OPERATION_TEXT_COMPLETION = "text_completion" as const;
+export const GEN_AI_OPERATION_GENERATE_CONTENT = "generate_content" as const;
 
 // --- Attributes (ATTR_ prefix, following OTel convention) ---
 

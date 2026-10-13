@@ -858,6 +858,30 @@ describe("Scopes", () => {
       expect(() => scope?.recordCacheWriteInputTokens(7)).not.toThrow();
       expect(() => scope?.recordFinishReasons(["stop", "length"])).not.toThrow();
       scope?.dispose();
+
+      const spans = sharedExporter.getFinishedSpans();
+      const attributes = spans[spans.length - 1].attributes;
+      expect(attributes[OpenTelemetryConstants.GEN_AI_RESPONSE_MODEL_KEY]).toBe("gpt-4-2024-11-20");
+      expect(attributes[OpenTelemetryConstants.GEN_AI_USAGE_CACHE_READ_INPUT_TOKENS_KEY]).toBe(12);
+      expect(attributes[OpenTelemetryConstants.GEN_AI_USAGE_CACHE_WRITE_INPUT_TOKENS_KEY]).toBe(7);
+    });
+
+    it.each([
+      [InferenceOperationType.CHAT, "chat"],
+      [InferenceOperationType.TEXT_COMPLETION, "text_completion"],
+      [InferenceOperationType.GENERATE_CONTENT, "generate_content"],
+    ])("should map %s to canonical operation name %s", (operationName, expected) => {
+      const scope = InferenceScope.start(
+        testRequest,
+        { operationName, model: "gpt-4" },
+        testAgentDetails,
+      );
+      scope.dispose();
+
+      const spans = sharedExporter.getFinishedSpans();
+      expect(
+        spans[spans.length - 1].attributes[OpenTelemetryConstants.GEN_AI_OPERATION_NAME_KEY],
+      ).toBe(expected);
     });
 
     it("should set conversationId and channel tags when provided", () => {
